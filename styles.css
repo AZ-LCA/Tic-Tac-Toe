@@ -1,0 +1,26 @@
+.grid_container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    justify-content: center;
+}
+.grid_part{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #000000;
+    aspect-ratio: 1;
+    font-size: 64px;
+}
+.row1 {
+    border-top-color: #ffffff;
+}
+.row3 {
+    border-bottom-color: #ffffff;
+}
+.column1 {
+    border-left-color: #ffffff;
+}
+.column3 {
+    border-right-color: #ffffff;
+}
