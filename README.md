@@ -29,3 +29,5 @@
 https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio - for aspect-ratio
 https://developer.mozilla.org/en-US/docs/Web/CSS/calc - for calc()
 https://www.quirksmode.org/css/units-values/viewport.html - view width and height (vw,vh)
+https://flaviocopes.com/fix-import-call-expects-one-argument/ - help with modules
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import - help with import
