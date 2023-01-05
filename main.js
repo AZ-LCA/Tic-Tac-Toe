@@ -4,7 +4,7 @@ import player from './player.js';
 function init() {
     const playerOne = new player('X');
     const playerTwo = new player('O');
-    const myGame = new game();
+    const myGame = new game(playerOne, playerTwo);
     myGame.setUpGameGrid();
 }
 

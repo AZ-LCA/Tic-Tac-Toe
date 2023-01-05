@@ -1,7 +1,9 @@
 export default class game{
-    constructor() {
+    constructor(player1, player2) {
         this.gameGrid;
         this.turnNumber = 1;
+        this.playerOne = player1;
+        this.playerTwo = player2;
     }
     setUpGameGrid() {
         const gridNodeList = document.querySelector('.grid_container').childNodes;
@@ -21,11 +23,11 @@ export default class game{
         if (this.turnNumber % 2 !== 0) {
             console.log('cp3');
             console.log(playerOne);
-            playerOne.startTurn();
+            this.playerOne.startTurn();
             console.log('cp4');
             this.turnNumber += 1;
         } else if (this.turnNumber < 10) {
-            playerTwo.startTurn();
+            this.playerTwo.startTurn();
             this.turnNumber += 1;
         } else {
             this.gameOver();
