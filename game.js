@@ -1,9 +1,11 @@
+import player from "./player";
+
 export default class game{
-    constructor(player1, player2) {
+    constructor() {
         this.gameGrid;
         this.turnNumber = 1;
-        this.playerOne = player1;
-        this.playerTwo = player2;
+        this.playerOne = new player('X');
+        this.playerTwo = new player('O');
     }
     setUpGameGrid() {
         const gridNodeList = document.querySelector('.grid_container').childNodes;
