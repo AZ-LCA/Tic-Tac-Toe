@@ -12,10 +12,18 @@
 
 ## Planning
 
+### Making a start page
+
+- In order to give the user the option to start their own tic-tac-toe game I decided to make a homepage
+- Used another grid as the formatting is simple enough
+- Used the aspect-ratio and calc() for first time - documentation below
 ### Setting up my board
 
 - I decided on a css grid as tic-tac-toe is played in a grid
 - To make the board look like a tic-tac-toe board, I used aspect-ratio, which made my grid components into squares
 - In addition I changed the border colors of all the edges to be white
-#### TO DO
-- From here I intend to create a new home html page with abutton labeled 'start' that will bring the user to this html page
+
+
+## Technical documents used
+https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio - for aspect-ratio
+https://developer.mozilla.org/en-US/docs/Web/CSS/calc - for calc()

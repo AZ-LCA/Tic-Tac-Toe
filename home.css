@@ -1,0 +1,37 @@
+.grid_container{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    justify-content: center;
+}
+.grid_part{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1;
+    font-size: 64px;
+}
+.title{
+    /*calc op allows me to have a minimum font size*/
+    font-size: calc(32px + 10vw);
+    grid-column: 1/ span 3;
+    aspect-ratio: 3/1;
+    
+}
+/*Aspect-ratio: width/height;*/
+.start{
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px;
+    /*padding make button feel less stuffed
+    margin auto centers the element horizontally and vertically whilst keeping the button smallish*/
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    /*give the button a cleaner look by curving corners*/
+    border-radius:16px;
+    /*Makes the button square*/
+    aspect-ratio: 1;
+    font-size: 64px;
+}
