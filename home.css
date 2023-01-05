@@ -35,3 +35,7 @@
     aspect-ratio: 1;
     font-size: 64px;
 }
+.link_container{
+    text-decoration: none;
+    color: #ffffff;
+}
