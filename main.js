@@ -2,12 +2,13 @@
 //import player from './player.js';
 
 class game{
-    constructor(p1,p2) {
+    constructor() {
         this.gameGrid;
-        this.defaultGrid;
+        this.defaultGrid = document.importNode(document.querySelector('.grid_container'), true);
         this.turnNumber = 1;
         this.playerOne = new player('X', 'player one');
         this.playerTwo = new player('O', 'player Two');
+        console.log(this.defaultGrid);
     }
     linkGameGrid() {
         const gridNodeList = document.querySelector('.grid_container').childNodes;
@@ -19,7 +20,7 @@ class game{
             }
         })
         this.gameGrid = gameArray;
-        this.defaultGrid = gameArray;
+        // this.defaultGrid = gameArray;
     }
     determinePlayerTurn(event, playerOne, playerTwo, gameGrid) {
         //playerOne and playerTwo stay as the same players - no new copies made
@@ -50,7 +51,7 @@ class game{
             for (let rowColumnNum=0;rowColumnNum<3;rowColumnNum++) {
                 //If all three are matching then call win and return
                 const className = whichOne + `${rowColumnNum+1}`;
-                const winNum = gameGrid.filter(rowColumn => whichOne.classList.contains(className))
+                const winNum = gameGrid.filter(rowColumn => rowColumn.classList.contains(className))
                 .reduce((accumulator, rowColumnVal) => {
                     if (rowColumnVal.innerText === player.noughtsOrCrosses) {
                         return accumulator +=1;
@@ -60,15 +61,15 @@ class game{
                 },0);
                 if (winNum === 3) {
                     this.gameOver(true, player);
-                    return;
+                    return true;
                 }
             }
             if (gameGrid[0].innerText === gameGrid[4].innerText === gameGrid[8].innerText || gameGrid[2].innerText === gameGrid[4].innerText === gameGrid[6].innerText) {
                 this.gameOver(true, player);
-                return;
+                return true;
             }
         }
-        if (turnNumber > 9) {
+        if (turnNumber === 9) {
             this.gameOver(false, undefined);
         }
 
@@ -78,7 +79,7 @@ class game{
         if (win) {
             //Hide grid and show text saying /player/ won the game
             player.winCount+=1;
-            console.log(`${player.playerName} wins!`)
+            console.log(`${player.playerName} wins!`);
         } else {
             //Hide grid and let players know that there is a draw
             console.log('Tie');
@@ -86,6 +87,7 @@ class game{
         //invite the players to play again with a button under the text
         //Update win counter that will be added
         //Get a tag that will display whos turn it is
+        //Underneath show button that takes the user to the (no way back) results page. They can see the final score there.
 
     }
 }
