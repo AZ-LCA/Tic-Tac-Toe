@@ -8,6 +8,9 @@ class game{
         this.turnNumber = 1;
         this.playerOne = new player('X', 'player one');
         this.playerTwo = new player('O', 'player Two');
+        this.end = {
+            end: false
+        }
         console.log(this.defaultGrid);
     }
     linkGameGrid() {
@@ -15,30 +18,32 @@ class game{
         const gameArray = []
         Array.from(gridNodeList).forEach((value, index) => {
             if (index%2 !== 0) {
-                value.addEventListener('click', (event) => {this.determinePlayerTurn(event, this.playerOne, this.playerTwo, this.gameGrid)});
+                value.addEventListener('click', (event) => {this.determinePlayerTurn(event, this.playerOne, this.playerTwo, this.gameGrid, this.end)});
                 gameArray.push(value);
             }
         })
         this.gameGrid = gameArray;
         // this.defaultGrid = gameArray;
     }
-    determinePlayerTurn(event, playerOne, playerTwo, gameGrid) {
+    determinePlayerTurn(event, playerOne, playerTwo, gameGrid, end) {
         //playerOne and playerTwo stay as the same players - no new copies made
-        let target = event.target;
-        if (target.innerText === 'X' || target.innerText === 'O') {
-            return;
-        }
-        if (this.turnNumber % 2 !== 0) {
-            playerOne.startTurn(target);
+        if (end.end !== true) {
+            let target = event.target;
+            if (target.innerText === 'X' || target.innerText === 'O') {
+                return;
+            }
+            if (this.turnNumber % 2 !== 0) {
+                playerOne.startTurn(target);
+                this.checkWin(playerOne, this.turnNumber, gameGrid, end);
+            } else {
+                playerTwo.startTurn(target);
+                this.checkWin(playerTwo, this.turnNumber, gameGrid, end);
+            }
             this.turnNumber += 1;
-            this.checkWin(playerOne, this.turnNumber, gameGrid);
-        } else {
-            playerTwo.startTurn(target);
-            this.turnNumber += 1;
-            this.checkWin(playerTwo, this.turnNumber, gameGrid);
         }
+
     }
-    checkWin(player, turnNumber, gameGrid) {
+    checkWin(player, turnNumber, gameGrid, end) {
         //Check rows and Columns
         //setUp current row
         let whichOne = 'column';
@@ -60,17 +65,21 @@ class game{
                     }
                 },0);
                 if (winNum === 3) {
+                    end.end = true;
                     this.gameOver(true, player);
-                    return true;
+                    return;
                 }
             }
             if (gameGrid[0].innerText === gameGrid[4].innerText === gameGrid[8].innerText || gameGrid[2].innerText === gameGrid[4].innerText === gameGrid[6].innerText) {
+                end.end = true;
                 this.gameOver(true, player);
-                return true;
+                return;
             }
         }
         if (turnNumber === 9) {
+            end.end = true;
             this.gameOver(false, undefined);
+            return;
         }
 
     }
@@ -88,7 +97,6 @@ class game{
         //Update win counter that will be added
         //Get a tag that will display whos turn it is
         //Underneath show button that takes the user to the (no way back) results page. They can see the final score there.
-
     }
 }
 
