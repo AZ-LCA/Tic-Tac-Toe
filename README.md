@@ -37,7 +37,7 @@
 ### Checking win conditions
 
 - To check win condiitons, I called a function each turn, called checkWin(), that would check for gameOver conditions. If any get found, the gameover() function gets called.
-- I found out that whilst variable parameters cannot be changed in functions, parameters that are objects can have their attributes changed - so I made an object and changed its attribute to stop the game from continuing
+- I found out that whilst variable parameters cannot be changed in functions, parameters that are objects can have their properties changed - so I made an object and changed its property to stop the game from continuing
 
 - As of Morning Fri 6 Jan it only outputs values to the console and increments player wincounts. I have made a logic plan that I will paste in below
 

@@ -6,44 +6,57 @@ class game{
         this.gameGrid;
         this.defaultGrid = document.importNode(document.querySelector('.grid_container'), true);
         this.turnNumber = 1;
-        this.playerOne = new player('X', 'player one');
-        this.playerTwo = new player('O', 'player Two');
+        this.playerOne = new player('X', 'Player one');
+        this.playerTwo = new player('O', 'Player two');
+        this.play= {
+            play: true
+        }
         this.end = {
             end: false
         }
-        console.log(this.defaultGrid);
+        this.playerTurn = document.querySelector('.player_turn');
+        this.winRatio = document.querySelector('.win_count');
     }
     linkGameGrid() {
+        this.turnNumber = 1;
+        this.end.end = false;
+        this.play.play = true;
+        console.log('1');
         const gridNodeList = document.querySelector('.grid_container').childNodes;
         const gameArray = []
+        console.log(gridNodeList);
         Array.from(gridNodeList).forEach((value, index) => {
             if (index%2 !== 0) {
-                value.addEventListener('click', (event) => {this.determinePlayerTurn(event, this.playerOne, this.playerTwo, this.gameGrid, this.end)});
+                value.addEventListener('click', (event) => {this.determinePlayerTurn(event/*, this.playerOne, this.playerTwo, this.gameGrid, this.end, this.playerTurn, this.defaultGrid, this.play*/)});
                 gameArray.push(value);
+                console.log('3');
             }
-        })
+        });
+        console.log('4');
+        this.playerTurn.innerText = `${this.playerOne.playerName}'s turn`;
+        this.winRatio.innerText = `${this.playerOne.winCount}:${this.playerTwo.winCount}`;
         this.gameGrid = gameArray;
         // this.defaultGrid = gameArray;
     }
-    determinePlayerTurn(event, playerOne, playerTwo, gameGrid, end) {
+    determinePlayerTurn(event /*, playerOne, playerTwo, gameGrid, end, playerTurn, defaultGrid, play*/) {
         //playerOne and playerTwo stay as the same players - no new copies made
-        if (end.end !== true) {
+        if (this.end.end !== true) {
             let target = event.target;
             if (target.innerText === 'X' || target.innerText === 'O') {
                 return;
             }
             if (this.turnNumber % 2 !== 0) {
-                playerOne.startTurn(target);
-                this.checkWin(playerOne, this.turnNumber, gameGrid, end);
+                this.playerOne.startTurn(target, this.playerTwo, this.playerTurn);
+                this.checkWin(this.playerOne, this.turnNumber);
             } else {
-                playerTwo.startTurn(target);
-                this.checkWin(playerTwo, this.turnNumber, gameGrid, end);
+                this.playerTwo.startTurn(target, this.playerOne, this.playerTurn);
+                this.checkWin(this.playerTwo, this.turnNumber);
             }
             this.turnNumber += 1;
         }
-
+        this.winRatio.innerText = `${this.playerOne.winCount}:${this.playerTwo.winCount}`;
     }
-    checkWin(player, turnNumber, gameGrid, end) {
+    checkWin(player, turnNumber) {
         //Check rows and Columns
         //setUp current row
         let whichOne = 'column';
@@ -56,7 +69,7 @@ class game{
             for (let rowColumnNum=0;rowColumnNum<3;rowColumnNum++) {
                 //If all three are matching then call win and return
                 const className = whichOne + `${rowColumnNum+1}`;
-                const winNum = gameGrid.filter(rowColumn => rowColumn.classList.contains(className))
+                const winNum = this.gameGrid.filter(rowColumn => rowColumn.classList.contains(className))
                 .reduce((accumulator, rowColumnVal) => {
                     if (rowColumnVal.innerText === player.noughtsOrCrosses) {
                         return accumulator +=1;
@@ -65,19 +78,19 @@ class game{
                     }
                 },0);
                 if (winNum === 3) {
-                    end.end = true;
+                    this.end.end = true;
                     this.gameOver(true, player);
                     return;
                 }
             }
-            if (gameGrid[0].innerText === gameGrid[4].innerText === gameGrid[8].innerText || gameGrid[2].innerText === gameGrid[4].innerText === gameGrid[6].innerText) {
-                end.end = true;
+            if (this.gameGrid[0].innerText === this.gameGrid[4].innerText === this.gameGrid[8].innerText || this.gameGrid[2].innerText === this.gameGrid[4].innerText === this.gameGrid[6].innerText) {
+                this.end.end = true;
                 this.gameOver(true, player);
                 return;
             }
         }
         if (turnNumber === 9) {
-            end.end = true;
+            this.end.end = true;
             this.gameOver(false, undefined);
             return;
         }
@@ -89,10 +102,57 @@ class game{
             //Hide grid and show text saying /player/ won the game
             player.winCount+=1;
             console.log(`${player.playerName} wins!`);
+            
         } else {
             //Hide grid and let players know that there is a draw
             console.log('Tie');
         }
+        setTimeout(() => {
+            const grid = document.querySelector('.grid_container')
+            grid.innerHTML = '';
+            const endMessage = document.createElement('div');
+            endMessage.style.cssText =  `
+            background-color: #000000;
+            color: #ffffff;
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+            border-radius:16px;
+            aspect-ratio: 1;
+            font-size: 64px;
+            grid-row:  1;
+            grid-column: 2;
+            `;
+            endMessage.innerText = `${player.playerName} wins!`;
+            const body = document.querySelector('body');
+            grid.appendChild(endMessage);
+            const resetButton = document.createElement('button');
+            resetButton.classList.add('reset_button');
+            resetButton.innerText = `Reset grid? \n (play again)`;
+            resetButton.style.cssText = `
+            background-color: #000000;
+            color: #ffffff;
+            padding: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: auto;
+            margin-bottom: auto;
+            border-radius:16px;
+            aspect-ratio: 1;
+            font-size: 64px;
+            grid-row:  2;
+            grid-column: 2;
+            `;
+            resetButton.addEventListener('click', () => {
+                grid.remove();
+                body.appendChild(this.defaultGrid);
+                link();
+            });
+            grid.appendChild(resetButton);
+            
+        }, 3000);
         //invite the players to play again with a button under the text
         //Update win counter that will be added
         //Get a tag that will display whos turn it is
@@ -106,18 +166,19 @@ class player {
         this.noughtsOrCrosses = symbol;
         this.winCount = 0;
     }
-    startTurn(target) {
+    startTurn(target, player, playerTurn) {
         //Ensure the same square isnt clicked on multiple times
         target.innerText = this.noughtsOrCrosses;
-        
+        playerTurn.innerText = `${player.playerName}'s turn`;
 
     }
 }
 
 //Remember scope when using init() function
-function init() {
-    const myGame = new game();
+
+const myGame = new game();
+function link() {
     myGame.linkGameGrid();
 }
-init();
+myGame.linkGameGrid();
 
