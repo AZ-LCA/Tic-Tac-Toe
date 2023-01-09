@@ -3,10 +3,6 @@ class game {
         this.grid;
         this.playerOne = new player('Player One', 'X');
         this.playerTwo = new player('Player Two', 'O');
-        this.ongoing = {
-            currentGame: true,
-            playSession: true
-        }
         this.gameInfo = {
             playerTurn: document.querySelector(`.player_turn`),
             winCount: document.querySelector(`.win_count`)
@@ -45,8 +41,10 @@ class game {
 
         }
         const isGameOver = this.gameOver();
-        if (!isGameOver) {
+        if (isGameOver !== true) {
             this.turns += 1;
+        } else {
+            this.endScreen();
         }
     }
     gameOver() {
@@ -81,13 +79,51 @@ class game {
         }
     }
     winner(player) {
-        console.log(`${player.name} wins!`);
+        this.grid.innerHTML = '';
+        const winMessage = document.createElement(`div`);
+        winMessage.classList.add(`win_message`);
+        winMessage.innerText = `${player.name} wins!`;
+        this.grid.appendChild(winMessage);
+        this.playerOne.wins += 1;
+        this.gameInfo.winCount.innerText = `Player One: ${this.playerOne.wins} | Player Two: ${this.playerTwo.wins}`;
+
+
     }
     tie() {
-        console.log(`Tie`);
+
+        this.grid.innerHTML = '';
+        const tieMessage = document.createElement(`div`);
+        tieMessage.classList.add(`tie_message`);
+        tieMessage.innerText = `It's a tie!`;
+        this.grid.appendChild(tieMessage);
     }
     endScreen() {
-        console.log('EndScreen');
+        setTimeout(() => {
+            this.grid.innerHTML = '';
+            const playAgain = document.createElement(`button`);
+            playAgain.classList.add(`play_again_button`);
+            playAgain.innerText = `Play again`;
+            playAgain.addEventListener(`click`, () => this.newGame(this.grid));
+            const end = document.createElement(`button`);
+            end.classList.add(`end_button`);
+            end.innerText = `End game`;
+            end.addEventListener(`click`, () => this.endSession(this.grid));
+            this.grid.appendChild(playAgain);
+            this.grid.appendChild(end);
+            this.gameInfo.playerTurn.innerText = '';
+        }, 5000)
+    }
+    newGame(grid) {
+        this.turns = 1;
+        grid.innerHTML = '';
+        this.setUpBoard()
+    }
+    endSession(grid) {
+        grid.innerHTML = '';
+        const thankYou = document.createElement('div');
+        thankYou.classList.add(`thanks_message`);
+        thankYou.innerText = `Thanks for playing!`;
+        grid.appendChild(thankYou);
     }
 }
 class player {
