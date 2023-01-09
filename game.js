@@ -120,6 +120,7 @@ class game {
         //I increment the winner's number of wins and update the gameinfo
         player.wins += 1;
         this.gameInfo.winCount.innerText = `Player One: ${this.playerOne.wins} | Player Two: ${this.playerTwo.wins}`;
+        //Getting an sfx from a filepath in the project and playing it
         const sfx = new Audio(`SFX/End-SFX/SFX1.wav`);
         sfx.play();
 
@@ -132,6 +133,7 @@ class game {
         tieMessage.classList.add(`tie_message`);
         tieMessage.innerText = `It's a tie!`;
         this.grid.appendChild(tieMessage);
+        //Getting an sfx from a filepath in the project and playing it
         const sfx = new Audio(`SFX/End-SFX/SFX1.wav`);
         sfx.play();
     }
@@ -185,7 +187,9 @@ class player {
     }
     turn(event) {
         if (event.target.innerText === '') {
+            //Setting the target cell to be the player's associated symbol
             event.target.innerText = this.symbol;
+            //Getting an sfx from a filepath in the project and playing it
             const sfx = new Audio(`SFX/Game-SFX/SFX1.wav`);
             sfx.play();
         }
