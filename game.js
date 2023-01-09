@@ -44,8 +44,50 @@ class game {
             }
 
         }
-        this.turns += 1;
-        //this.gameOver();
+        const isGameOver = this.gameOver();
+        if (!isGameOver) {
+            this.turns += 1;
+        }
+    }
+    gameOver() {
+        let columnsRows = ['column', 'row'];
+        const cells = Array.from(this.grid.childNodes)
+        for (let i=0;i<2;i++) {
+            for (let j=1;j<4;j++) {
+                const getGroup = cells.filter(columnOrRow => columnOrRow.classList.contains(`${columnsRows[i]}${j}`));
+                console.log(getGroup[0], getGroup[1], getGroup[2]);
+                if (getGroup[0].innerText === getGroup[1].innerText && getGroup[1].innerText === getGroup[2].innerText && getGroup[0].innerText !== '') {
+                    if (this.turns % 2 !== 0) {
+                        this.winner(this.playerOne);
+                        return true;
+                    } else {
+                        this.winner(this.playerTwo);
+                        return true;
+                    }
+                }
+            }
+        }
+        if ((cells[0].innerText === cells[4].innerText && cells[8].innerText === cells[4].innerText && cells[4].innerText !== '') || (cells[2].innerText === cells[4].innerText && cells[6].innerText === cells[4].innerText && cells[4].innerText !== '')) {
+            if (this.turns % 2 !== 0) {
+                this.winner(this.playerOne);
+                return true;
+            } else {
+                this.winner(this.playerTwo);
+                return true;
+            }
+        } else if(this.turns === 9) {
+            this.tie()
+            return true;
+        }
+    }
+    winner(player) {
+        console.log(`${player.name} wins!`);
+    }
+    tie() {
+        console.log(`Tie`);
+    }
+    endScreen() {
+        console.log('EndScreen');
     }
 }
 class player {
