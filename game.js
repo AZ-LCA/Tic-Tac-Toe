@@ -120,6 +120,8 @@ class game {
         //I increment the winner's number of wins and update the gameinfo
         player.wins += 1;
         this.gameInfo.winCount.innerText = `Player One: ${this.playerOne.wins} | Player Two: ${this.playerTwo.wins}`;
+        const sfx = new Audio(`SFX/End-SFX/SFX1.wav`);
+        sfx.play();
 
 
     }
@@ -130,6 +132,8 @@ class game {
         tieMessage.classList.add(`tie_message`);
         tieMessage.innerText = `It's a tie!`;
         this.grid.appendChild(tieMessage);
+        const sfx = new Audio(`SFX/End-SFX/SFX1.wav`);
+        sfx.play();
     }
     endScreen() {
         //I set a timeout to allow players to read the win or tie message
@@ -182,6 +186,8 @@ class player {
     turn(event) {
         if (event.target.innerText === '') {
             event.target.innerText = this.symbol;
+            const sfx = new Audio(`SFX/Game-SFX/SFX1.wav`);
+            sfx.play();
         }
     }
 }
