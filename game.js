@@ -53,7 +53,6 @@ class game {
         for (let i=0;i<2;i++) {
             for (let j=1;j<4;j++) {
                 const getGroup = cells.filter(columnOrRow => columnOrRow.classList.contains(`${columnsRows[i]}${j}`));
-                console.log(getGroup[0], getGroup[1], getGroup[2]);
                 if (getGroup[0].innerText === getGroup[1].innerText && getGroup[1].innerText === getGroup[2].innerText && getGroup[0].innerText !== '') {
                     if (this.turns % 2 !== 0) {
                         this.winner(this.playerOne);
@@ -84,7 +83,7 @@ class game {
         winMessage.classList.add(`win_message`);
         winMessage.innerText = `${player.name} wins!`;
         this.grid.appendChild(winMessage);
-        this.playerOne.wins += 1;
+        player.wins += 1;
         this.gameInfo.winCount.innerText = `Player One: ${this.playerOne.wins} | Player Two: ${this.playerTwo.wins}`;
 
 
