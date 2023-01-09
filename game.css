@@ -4,9 +4,9 @@
     grid-template-rows: repeat(3, 1fr);
     justify-content: center;
     margin: auto auto auto auto;
-    max-width: 100vh;
+    max-width: 90vh;
 }
-.grid_part{
+.grid_cell{
     display: flex;
     justify-content: center;
     align-items: center;
