@@ -26,7 +26,7 @@
 .column3 {
     border-right-color: #ffffff;
 }
-.win_message, .tie_message, .thanks_message {
+.win_message, .tie_message {
     grid-row: 2/span 1;
     grid-column: 2/span 1;
     display: flex;
@@ -41,6 +41,11 @@
     justify-content: center;
     align-items: center;
     aspect-ratio: 1/1;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px;
+    border-radius:16px;
+    font-size: 30px;
 }
 .end_button {
     grid-row: 2/span 1;
@@ -49,4 +54,33 @@
     justify-content: center;
     align-items: center;
     aspect-ratio: 1/1;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px;
+    border-radius:16px;
+    font-size: 30px;
+}
+.link_container{
+    text-decoration: none;
+    color: #ffffff;
+}
+.new_session_button {
+    grid-row: 3/span 1;
+    grid-column: 2/span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000;
+    color: #ffffff;
+    padding: 10px;
+    border-radius:16px;
+    font-size: 30px;
+    aspect-ratio: 1/1;
+}
+.thanks_message {
+    grid-row: 2/span 1;
+    grid-column: 2/span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
