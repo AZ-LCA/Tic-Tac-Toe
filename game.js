@@ -8,10 +8,35 @@ class game {
         //Creating a gameInfo object which contains variables that represent the messages visible on the game page
         this.gameInfo = {
             playerTurn: document.querySelector(`.player_turn`),
-            winCount: document.querySelector(`.win_count`)
+            winCount: document.querySelector(`.win_count`),
+            gameOngoing: true
         }
         //Setting number of turns to one
         this.turns = 1;
+    }
+    checkLoad() {
+                try {
+                    if (JSON.parse(window.localStorage.getItem('gameOngoing')) === true) {
+                        const cells = JSON.parse(localStorage.getItem('cells'));
+                        this.gameInfo.playerTurn.innerText = localStorage.getItem('playerTurn');
+                        this.turns =JSON.parse(localStorage.getItem('turns'));
+                        Array.from(this.grid.childNodes).forEach((node, index) => {
+                            node.innerText = cells[index];
+                        });
+                    }
+                    this.playerOne.wins = JSON.parse(localStorage.getItem('oneWins'));
+                    this.playerTwo.wins = JSON.parse(localStorage.getItem('twoWins'));
+                    if (this.turns % 2 !== 0) {
+                        this.gameInfo.playerTurn.innerText = `Turn: ${this.playerOne.name}`;
+                    } else {
+                        this.gameInfo.playerTurn.innerText = `Turn: ${this.playerTwo.name}`;
+                    }
+    
+                    this.gameInfo.winCount.innerText = `Player One: ${this.playerOne.wins} | Player Two: ${this.playerTwo.wins}`;
+    
+                } catch(err) {
+                    console.log(err.message);
+                }
     }
     setUpBoard() {
         //This function sets up the board
@@ -47,7 +72,7 @@ class game {
             if (initialTargetValue !== targetValue) {
                 this.gameInfo.playerTurn.innerText = `Turn: Player Two`;
             }
-        } else {
+        } else if (`Turn: ${this.playerTwo.name}` === this.gameInfo.playerTurn.innerText) {
             this.playerTwo.turn(event);
             const targetValue = event.target.innerText;
             if (initialTargetValue !== targetValue) {
@@ -60,8 +85,23 @@ class game {
         //If the game is not over then add a turn and continue on as normal
         if (isGameOver !== true) {
             this.turns += 1;
+            const cells = Array.from(this.grid.childNodes).map(node => {
+                return node.innerText;
+            });
+            window.localStorage.setItem('cells', JSON.stringify(cells));
+            window.localStorage.setItem('turns', JSON.stringify(this.turns));
+            window.localStorage.setItem('oneWins', JSON.stringify(this.playerOne.wins));
+            window.localStorage.setItem('twoWins', JSON.stringify(this.playerTwo.wins));
+            window.localStorage.setItem('playerTurn', this.gameInfo.playerTurn.innerText);
+            window.localStorage.setItem('gameOngoing', JSON.stringify(this.gameInfo.gameOngoing));
+            // console.log(localStorage.getItem('grid'));
+            // console.log(this.grid);
         } else {
             //Otherwise, go to the endscreen method
+            this.gameInfo.gameOngoing = false;
+            window.localStorage.setItem('gameOngoing', JSON.stringify(this.gameInfo.gameOngoing));
+            window.localStorage.setItem('oneWins', JSON.stringify(this.playerOne.wins));
+            window.localStorage.setItem('twoWins', JSON.stringify(this.playerTwo.wins));
             this.endScreen();
         }
     }
@@ -154,8 +194,6 @@ class game {
             //I append them to the grid
             this.grid.appendChild(playAgain);
             this.grid.appendChild(end);
-            //I get rid of the playerturn gameinfo as it is irrelevant now
-            this.gameInfo.playerTurn.innerText = '';
         }, 5000)
     }
     newGame(grid) {
@@ -168,6 +206,7 @@ class game {
     }
     endSession(grid) {
         //Empties the grid and adds a thanks message - this is the final tab as the player ends their session
+        localStorage.clear();
         grid.innerHTML = '';
         const thankYou = document.createElement('div');
         thankYou.classList.add(`thanks_message`);
@@ -179,6 +218,8 @@ class game {
         newSession.innerHTML = `<a class = 'link_container' target = '_self'>Start new session</a>`;
         newSession.addEventListener('click', this.playAudioMove);
         grid.appendChild(newSession);
+        //I get rid of the playerturn gameinfo as it is irrelevant now
+        this.gameInfo.playerTurn.innerText = '';
         const sfx = new Audio(`SFX/Game-SFX/mixkit-arcade-game-jump-coin-216.wav`);
         sfx.play();
     }
@@ -205,8 +246,8 @@ class player {
     }
 }
 
-const myGame = new game();
+let myGame = new game();
 myGame.setUpBoard();
-
+myGame.checkLoad();
 //Add hover function to all buttons
 //
