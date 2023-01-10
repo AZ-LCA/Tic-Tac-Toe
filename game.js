@@ -31,7 +31,12 @@ class game {
                     } else {
                         this.gameInfo.playerTurn.innerText = `Turn: ${this.playerTwo.name}`;
                     }
-    
+                    if (this.playerOne.wins === null) {
+                        this.playerOne.wins = 0;
+                    }
+                    if (this.playerTwo.wins === null) {
+                        this.playerTwo.wins = 0;
+                    }
                     this.gameInfo.winCount.innerText = `Player One: ${this.playerOne.wins} | Player Two: ${this.playerTwo.wins}`;
     
                 } catch(err) {
