@@ -4,7 +4,7 @@
     grid-template-rows: repeat(3, 1fr);
     justify-content: center;
     margin: auto auto auto auto;
-    max-width: 90vh;
+    max-width: 84vh;
 }
 .grid_cell{
     display: flex;
@@ -86,4 +86,16 @@
 }
 .play_again_button:hover, .end_button:hover, .new_session_button:hover {
     background-color: #32527B;
+}
+.game_info {
+    display: inline-flex;
+    margin: 0px 20px;
+}
+.player_turn {
+    position: absolute;
+    right: 20px;
+}
+.win_count {
+    position: absolute;
+    left: 20px;
 }
