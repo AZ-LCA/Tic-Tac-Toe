@@ -162,7 +162,9 @@ class game {
         //This function resets some values not covered by the setUpBoard method and then calls it, for a fresh game (retaining the number of wins)
         this.turns = 1;
         grid.innerHTML = '';
-        this.setUpBoard()
+        this.setUpBoard();
+        const sfx = new Audio(`SFX/Game-SFX/mixkit-arcade-game-jump-coin-216.wav`);
+        sfx.play();
     }
     endSession(grid) {
         //Empties the grid and adds a thanks message - this is the final tab as the player ends their session
@@ -174,9 +176,16 @@ class game {
         //User can start fresh by clicking this button
         const newSession = document.createElement('button');
         newSession.classList.add(`new_session_button`);
-        newSession.innerHTML = `<a class = 'link_container' href = 'game.html'>Start new session</a>`;
+        newSession.innerHTML = `<a class = 'link_container' target = '_self'>Start new session</a>`;
+        newSession.addEventListener('click', this.playAudioMove);
         grid.appendChild(newSession);
-
+        const sfx = new Audio(`SFX/Game-SFX/mixkit-arcade-game-jump-coin-216.wav`);
+        sfx.play();
+    }
+    playAudioMove() {
+        const sfx = new Audio(`SFX/Game-SFX/mixkit-positive-interface-beep-221.wav`);
+        sfx.play();
+        window.open('game.html', '_self');
     }
 }
 class player {
@@ -198,3 +207,6 @@ class player {
 
 const myGame = new game();
 myGame.setUpBoard();
+
+//Add hover function to all buttons
+//

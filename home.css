@@ -35,6 +35,9 @@
     aspect-ratio: 1;
     font-size: 64px;
 }
+.start:hover {
+    background-color: #32527B;
+}
 .link_container{
     text-decoration: none;
     color: #ffffff;

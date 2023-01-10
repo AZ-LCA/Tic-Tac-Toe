@@ -84,3 +84,6 @@
     justify-content: center;
     align-items: center;
 }
+.play_again_button:hover, .end_button:hover, .new_session_button:hover {
+    background-color: #32527B;
+}
