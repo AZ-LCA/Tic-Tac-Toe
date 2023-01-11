@@ -99,3 +99,45 @@
     position: absolute;
     left: 20px;
 }
+.player_one_name {
+    grid-row: 1/span 1;
+    grid-column: 1/span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.player_two_name {
+    grid-row: 1/span 1;
+    grid-column: 3/span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.player_one_symbol {
+    grid-row: 2/span 1;
+    grid-column: 1/span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.player_two_symbol {
+    grid-row: 2/span 1;
+    grid-column: 3/span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.ai_checkbox {
+    grid-row: 2/span 1;
+    grid-column: 2/span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.button_cell {
+    grid-row: 3/span 1;
+    grid-column: 2/span 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

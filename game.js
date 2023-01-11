@@ -3,51 +3,160 @@ class game {
         //An empty grid
         this.grid;
         //Creating two instances of the player class
-        this.playerOne = new player('Player One', 'X');
-        this.playerTwo = new player('Player Two', 'O');
+        console.log(this.playerOne);
+        if (localStorage.p1Name !== null) {
+            this.playerOne = new player(localStorage.getItem('p1Name'), localStorage.getItem('p1Symbol'));//new player('Player One', 'X');
+            this.playerTwo = new player(localStorage.getItem('p2Name'), localStorage.getItem('p2Symbol'));//new player('Player Two', 'O');
+        }
         //Creating a gameInfo object which contains variables that represent the messages visible on the game page
         this.gameInfo = {
             playerTurn: document.querySelector(`.player_turn`),
             winCount: document.querySelector(`.win_count`),
-            gameOngoing: true
+            gameOngoing: true,
+            // ai: false
         }
         //Setting number of turns to one
         this.turns = 1;
     }
+    inputScreenPlayers() {
+        // Creates an input screen if players haven't been defined yet (no local storage)
+        if (this.playerOne.name === null) {
+            //I set up the grid cells and populate them with inputs that ahve placeholders that describe what the  boxes are used for
+            const p1NameContainer = document.createElement('div');
+            p1NameContainer.classList.add('player_one_name');
+            const p1Name = document.createElement('input');
+            p1Name.maxLength = '30';
+            p1Name.placeholder = 'Player One Name';
+            p1NameContainer.appendChild(p1Name);
+            const p1SymbolContainer = document.createElement('div');
+            p1SymbolContainer.classList.add('player_one_symbol');
+            const p1Symbol = document.createElement('input');
+            p1Symbol.maxLength = '1';
+            p1Symbol.placeholder = 'Player One Symbol';
+            p1SymbolContainer.appendChild(p1Symbol);
+            document.querySelector('.grid_container').appendChild(p1NameContainer);
+            document.querySelector('.grid_container').appendChild(p1SymbolContainer);
+            const p2NameContainer = document.createElement('div');
+            p2NameContainer.classList.add('player_two_name');
+            const p2Name = document.createElement('input');
+            p2Name.placeholder = 'Player Two Name';
+            p2Name.maxLength = '30';
+            p2NameContainer.appendChild(p2Name);
+            const p2SymbolContainer = document.createElement('div');
+            p2SymbolContainer.classList.add('player_two_symbol');
+            const p2Symbol = document.createElement('input');
+            p2Symbol.maxLength = '1';
+            p2Symbol.placeholder = 'Player Two Symbol';
+            p2SymbolContainer.appendChild(p2Symbol);
+            document.querySelector('.grid_container').appendChild(p2NameContainer);
+            document.querySelector('.grid_container').appendChild(p2SymbolContainer);
+            //Making a checkbox to determine if this is an AI opponent
+            // const checkboxCell = document.createElement('div');
+            // checkboxCell.classList.add('ai_checkbox');
+            // const checkbox = document.createElement('input');
+            // checkbox.setAttribute(`type`, `checkbox`);
+            // const checkboxlabel = document.createElement('label');
+            // checkboxlabel.innerText = 'AI opponent';
+            // checkboxCell.appendChild(checkboxlabel);
+            // checkboxlabel.appendChild(checkbox);
+            // document.querySelector('.grid_container').appendChild(checkboxCell);
+            //I made a button to finalise the creation
+            const createCharacters = document.createElement('button');
+            createCharacters.classList.add('new_session_button');
+            createCharacters.innerText = 'Create';
+            createCharacters.addEventListener('click', () => {this.makePlayers(p1Name.value, p1Symbol.value, p2Name.value, p2Symbol.value)});/*, checkbox.value*/
+            document.querySelector('.grid_container').appendChild(createCharacters);
+        } else {
+            //If players are defined then skip
+            this.setUpBoard();
+        }
+
+    }
+    makePlayers(p1name, p1symbol, p2name, p2symbol) {
+        /*, checkbox*/
+        //I do input checks here
+        if (p1name === '') {
+            p1name = 'Player One';
+        }
+        if (p1symbol === '') {
+            p1symbol = 'X';
+        }
+        if (p2name === '') {
+            p2name = 'Player Two';
+        }
+        if (p2symbol === '') {
+            p2symbol = 'O';
+        }
+        if (p1name === p2name) {
+            p1name = `${p1name} (Player One)`;
+            p2name = `${p2name} (Player Two)`;
+        }
+        if (p1symbol === p2symbol) {
+            p1symbol = `${p1symbol}1`;
+            p2symbol = `${p2symbol}2`;
+        }
+        // if (checkbox === 'on') {
+        //     this.gameInfo.ai = true;
+        // }
+        //I set my values in local storage for reference
+        document.querySelector('.grid_container').innerHTML = '';
+        // localStorage.setItem('ai',JSON.stringify(this.gameInfo.ai));
+        localStorage.setItem('p1Name',p1name);
+        localStorage.setItem('p1Symbol',p1symbol);
+        localStorage.setItem('p2Name',p2name);
+        localStorage.setItem('p2Symbol',p2symbol);
+        //I assign the values to the players and call the setUp function
+        this.playerOne = new player(p1name, p1symbol);
+        this.playerTwo = new player(p2name, p2symbol);
+        this.setUpBoard();
+        const sfx = new Audio(`SFX/Game-SFX/mixkit-positive-interface-beep-221.wav`);
+        sfx.play();
+
+    }
     checkLoad() {
-                try {
-                    if (JSON.parse(window.localStorage.getItem('gameOngoing')) === true) {
-                        const cells = JSON.parse(localStorage.getItem('cells'));
-                        this.gameInfo.playerTurn.innerText = localStorage.getItem('playerTurn');
-                        this.turns =JSON.parse(localStorage.getItem('turns'));
-                        Array.from(this.grid.childNodes).forEach((node, index) => {
-                            node.innerText = cells[index];
-                        });
-                    }
-                    this.playerOne.wins = JSON.parse(localStorage.getItem('oneWins'));
-                    this.playerTwo.wins = JSON.parse(localStorage.getItem('twoWins'));
-                    if (this.turns % 2 !== 0) {
-                        this.gameInfo.playerTurn.innerText = `Turn: ${this.playerOne.name}`;
-                    } else {
-                        this.gameInfo.playerTurn.innerText = `Turn: ${this.playerTwo.name}`;
-                    }
-                    if (this.playerOne.wins === null) {
-                        this.playerOne.wins = 0;
-                    }
-                    if (this.playerTwo.wins === null) {
-                        this.playerTwo.wins = 0;
-                    }
-                    this.gameInfo.winCount.innerText = `Player One: ${this.playerOne.wins} | Player Two: ${this.playerTwo.wins}`;
-    
-                } catch(err) {
-                    console.log(err.message);
-                }
+        //This will run each time the board is set up
+        //It only runs if a game is in progress and a session has not been ended
+        try {
+            //I check to make sure a game is ongoing and only load turns and game position if the value is true
+            if (JSON.parse(window.localStorage.getItem('gameOngoing')) === true) {
+                const cells = JSON.parse(localStorage.getItem('cells'));
+                this.gameInfo.playerTurn.innerText = localStorage.getItem('playerTurn');
+                this.turns =JSON.parse(localStorage.getItem('turns'));
+                Array.from(this.grid.childNodes).forEach((node, index) => {
+                    node.innerText = cells[index];
+                });
+            }
+            //Then I load the rest of the stored information regardless
+            this.gameInfo.ai = JSON.parse(localStorage.getItem('ai'));
+            this.playerOne.wins = JSON.parse(localStorage.getItem('oneWins'));
+            this.playerTwo.wins = JSON.parse(localStorage.getItem('twoWins'));
+            //This finds which player's turn it is
+            if (this.turns % 2 !== 0) {
+                this.gameInfo.playerTurn.innerText = `Turn: ${this.playerOne.name}`;
+            } else {
+                this.gameInfo.playerTurn.innerText = `Turn: ${this.playerTwo.name}`;
+            }
+            //This corrects null values to zero values
+            if (this.playerOne.wins === null) {
+                this.playerOne.wins = 0;
+            }
+            if (this.playerTwo.wins === null) {
+                this.playerTwo.wins = 0;
+            }
+            //This refreshes the wincount to accurately reflect the status of the loaded game
+            this.gameInfo.winCount.innerText = `${this.playerOne.name}: ${this.playerOne.wins} | ${this.playerTwo.name}: ${this.playerTwo.wins}`;
+
+        } catch(err) {
+            //If there is an error then I get an error message
+            //I used this during testing
+            console.log(err.message);
+        }
     }
     setUpBoard() {
         //This function sets up the board
         //First I set the game info to display which player's turn it is and the overall score
         this.gameInfo.playerTurn.innerText = `Turn: ${this.playerOne.name}`;
-        this.gameInfo.winCount.innerText = `Player One: ${this.playerOne.wins} | Player Two: ${this.playerTwo.wins}`;
+        this.gameInfo.winCount.innerText = `${this.playerOne.name}: ${this.playerOne.wins} | ${this.playerTwo.name}: ${this.playerTwo.wins}`;
         //I set grid to the container I set up in my html file
         this.grid = document.querySelector('.grid_container');
         //I populate the grid here, adding appropriate tags as I go (using the for loops)
@@ -63,6 +172,7 @@ class game {
                 this.grid.appendChild(cell);
             }
         }
+        this.checkLoad();
     }
     getPlayerTurn(event) {
         //I get the initial value of the target
@@ -75,13 +185,17 @@ class game {
             const targetValue = event.target.innerText;
             //If the player has been allowed to change the contents of the target cell, advance to the next go. Otherwise, the player takes their go again
             if (initialTargetValue !== targetValue) {
-                this.gameInfo.playerTurn.innerText = `Turn: Player Two`;
+                this.gameInfo.playerTurn.innerText = `Turn: ${this.playerTwo.name}`;
             }
+            // if (this.gameInfo.ai === true) {
+            //     this.playerTwo.aiTurn(event, this.grid);
+            //     this.gameInfo.playerTurn.innerText = `Turn: ${this.playerOne.name}`;
+            // }
         } else if (`Turn: ${this.playerTwo.name}` === this.gameInfo.playerTurn.innerText) {
             this.playerTwo.turn(event);
             const targetValue = event.target.innerText;
             if (initialTargetValue !== targetValue) {
-                this.gameInfo.playerTurn.innerText = `Turn: Player One`;
+                this.gameInfo.playerTurn.innerText = `Turn: ${this.playerOne.name}`;
             }
 
         }
@@ -164,12 +278,10 @@ class game {
         this.grid.appendChild(winMessage);
         //I increment the winner's number of wins and update the gameinfo
         player.wins += 1;
-        this.gameInfo.winCount.innerText = `Player One: ${this.playerOne.wins} | Player Two: ${this.playerTwo.wins}`;
+        this.gameInfo.winCount.innerText = `${this.playerOne.name}: ${this.playerOne.wins} | ${this.playerTwo.name}: ${this.playerTwo.wins}`;
         //Getting an sfx from a filepath in the project and playing it
         const sfx = new Audio(`SFX/End-SFX/SFX1.wav`);
         sfx.play();
-
-
     }
     tie() {
         //Same as wins, but a different message and I do not update the gameinfo
@@ -212,6 +324,8 @@ class game {
     endSession(grid) {
         //Empties the grid and adds a thanks message - this is the final tab as the player ends their session
         localStorage.clear();
+        this.playerOne = undefined;
+        this.playerTwo = undefined;
         grid.innerHTML = '';
         const thankYou = document.createElement('div');
         thankYou.classList.add(`thanks_message`);
@@ -249,10 +363,16 @@ class player {
             sfx.play();
         }
     }
+    // aiTurn(event,grid) {
+    //     const cells = Array.from(grid.childNodes).map(node => {
+    //        cells.push(node.innerText); 
+    //     })
+    //     const winningIndex = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    // }
 }
 
 let myGame = new game();
-myGame.setUpBoard();
-myGame.checkLoad();
-//Add hover function to all buttons
-//
+myGame.inputScreenPlayers();
+//Plan for tomorrow - give players the ability to customise their own characters - this can be done before the playing grid is made
+
+//I will be giving players the opportunity to create their own names and symbols (will need to update local storage to include the player names and symbols)
