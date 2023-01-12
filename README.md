@@ -1,5 +1,27 @@
 # Tic-Tac-Toe
 
+# Table Of Contents
+- Header
+    - Webpage link
+    - User stories
+    - Wireframe
+    - Description
+    - What I learned
+    - Technical Docs Used
+- Project Breakdown
+    - HTML Files
+        - index.html
+        - game.html
+    - CSS Files
+    - JavaScript Files
+        - index.js
+        - game.js
+
+# Header
+## Page link
+
+https://az-lca.github.io/Tic-Tac-Toe/
+
 ## User Stories
 
 - As a user, I should be able to start a new tic tac toe game
@@ -9,6 +31,35 @@
 - As a user, I should be shown a message when I win, lose or tie
 - As a user, I should not be able to continue playing once I win, lose, or tie
 - As a user, I should be able to play the game again without refreshing the page
+
+## Wireframe
+https://app.uizard.io/p/8ad1dab7
+
+## Description 
+- This is a simple tic-tac-toe game
+- It is a local game
+- Two players
+- Choose any player name and symbol and play
+Game data is stored in local storage, so refreshing will just load the current game (or a new game if the game is finished)
+- Reloading the page is not necessary to start a new game
+- This option is available as a button that will pop up 5 or so seconds after the game is finished
+- To end a session click the end game button. This will update the html to a thanks for playing page. By clicking the buttonon this page, you can start a fresh session (or you can refresh)
+
+## What I Learned
+
+- Audio object in js
+- Local storage in js
+- Aspect-ratio in css
+- View width and height in css
+- calc() in css
+
+## Technical documents used
+https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio - for aspect-ratio
+https://developer.mozilla.org/en-US/docs/Web/CSS/calc - for calc()
+https://www.quirksmode.org/css/units-values/viewport.html - view width and height (vw,vh)
+https://developer.mozilla.org/en-US/docs/Web/CSS/:hover - CSS hover
+https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage - local storage
+https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement/Audio - audio
 
 # Project Breakdown
 
@@ -79,9 +130,9 @@
 - One for index.html and another for game.html
 - Both are similar in function as they are both for setting up/using grids and buttons
 - Not much to be said on those
-# Javascript Files
+# JavaScript Files
 
-## Index.js
+## index.js
 
 ```js
 const startButton = document.querySelector('.start');
@@ -97,7 +148,7 @@ function playAudioMove() {
 - There was very little js in this file
 - There is a playAudioMove function that plays an audio and moves to the game.html page
 
-## Game.js
+## game.js
 ### Game Class
 
 #### Attributes
@@ -632,20 +683,3 @@ getPlayerTurn(event) {
 - I wanted to write my own minimax algorithm and think I have found a way to make it fit
 - The plan for this and the commented out ai lines was to create an alternate path for functions to take if an ai checkbox was ticked (this would be visible during the player info input screen)
 - If the opponent was an AI (i.e. gameInfo.ai = true) then the minimax would run, playing optimal and unbeatable moves
-
-
-# Footer
-## Wireframe
-https://app.uizard.io/p/8ad1dab7
-
-## Technical documents used
-https://developer.mozilla.org/en-US/docs/Web/CSS/aspect-ratio - for aspect-ratio
-https://developer.mozilla.org/en-US/docs/Web/CSS/calc - for calc()
-https://www.quirksmode.org/css/units-values/viewport.html - view width and height (vw,vh)
-https://developer.mozilla.org/en-US/docs/Web/CSS/:hover - CSS hover
-https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage - local storage
-https://developer.mozilla.org/en-US/docs/Web/API/HTMLAudioElement/Audio - audio
-
-### Unused docs
-https://flaviocopes.com/fix-import-call-expects-one-argument/ - help with modules
-https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import - help with import
