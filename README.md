@@ -2,11 +2,11 @@
 
 # Table Of Contents
 - Header
-    - Webpage link
-    - User stories
+    - Webpage Link
+    - User Stories
     - Wireframe
     - Description
-    - What I learned
+    - What I Learned
     - Technical Docs Used
 - Project Breakdown
     - HTML Files
@@ -18,7 +18,7 @@
         - game.js
 
 # Header
-## Page link
+## Webpage Link
 
 https://az-lca.github.io/Tic-Tac-Toe/
 
