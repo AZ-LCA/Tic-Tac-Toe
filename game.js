@@ -21,7 +21,7 @@ class game {
     inputScreenPlayers() {
         // Creates an input screen if players haven't been defined yet (no local storage)
         if (this.playerOne.name === null) {
-            //I set up the grid cells and populate them with inputs that ahve placeholders that describe what the  boxes are used for
+            //I set up the grid cells and populate them with inputs that have placeholders that describe what the  boxes are used for
             const p1NameContainer = document.createElement('div');
             p1NameContainer.classList.add('player_one_name');
             const p1Name = document.createElement('input');
@@ -70,7 +70,6 @@ class game {
             //If players are defined then skip
             this.setUpBoard();
         }
-
     }
     makePlayers(p1name, p1symbol, p2name, p2symbol) {
         /*, checkbox*/
@@ -111,7 +110,6 @@ class game {
         this.setUpBoard();
         const sfx = new Audio(`SFX/Game-SFX/mixkit-positive-interface-beep-221.wav`);
         sfx.play();
-
     }
     checkLoad() {
         //This will run each time the board is set up
@@ -127,7 +125,7 @@ class game {
                 });
             }
             //Then I load the rest of the stored information regardless
-            this.gameInfo.ai = JSON.parse(localStorage.getItem('ai'));
+            //this.gameInfo.ai = JSON.parse(localStorage.getItem('ai'));
             this.playerOne.wins = JSON.parse(localStorage.getItem('oneWins'));
             this.playerTwo.wins = JSON.parse(localStorage.getItem('twoWins'));
             //This finds which player's turn it is
@@ -353,6 +351,7 @@ class player {
         this.name = name;
         this.symbol = symbol;
         this.wins = 0;
+        //this.score = 0;
     }
     turn(event) {
         if (event.target.innerText === '') {
@@ -364,6 +363,7 @@ class player {
         }
     }
     // aiTurn(event,grid) {
+    //     localStorage.setItem('score', JSON.stringify(this.score));
     //     const cells = Array.from(grid.childNodes).map(node => {
     //        cells.push(node.innerText); 
     //     })
