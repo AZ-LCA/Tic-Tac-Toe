@@ -6,7 +6,11 @@ class game {
         console.log(this.playerOne);
         if (localStorage.p1Name !== null) {
             this.playerOne = new player(localStorage.getItem('p1Name'), localStorage.getItem('p1Symbol'));//new player('Player One', 'X');
+            //if (localStorage.checkbox !== 'on') {
             this.playerTwo = new player(localStorage.getItem('p2Name'), localStorage.getItem('p2Symbol'));//new player('Player Two', 'O');
+            //} else {
+            //    this.playerTwo = new aiPlayer(localStorage.getItem('p2Name'), localStorage.getItem('p2Symbol'));
+            //}
         }
         //Creating a gameInfo object which contains variables that represent the messages visible on the game page
         this.gameInfo = {
@@ -25,6 +29,7 @@ class game {
             const p1NameContainer = document.createElement('div');
             p1NameContainer.classList.add('player_one_name');
             const p1Name = document.createElement('input');
+            p1Name.classList.add('inputBox');
             p1Name.maxLength = '30';
             p1Name.placeholder = 'Player One Name';
             p1NameContainer.appendChild(p1Name);
@@ -32,6 +37,7 @@ class game {
             p1SymbolContainer.classList.add('player_one_symbol');
             const p1Symbol = document.createElement('input');
             p1Symbol.maxLength = '1';
+            p1Symbol.classList.add('inputBox');
             p1Symbol.placeholder = 'Player One Symbol';
             p1SymbolContainer.appendChild(p1Symbol);
             document.querySelector('.grid_container').appendChild(p1NameContainer);
@@ -39,39 +45,42 @@ class game {
             const p2NameContainer = document.createElement('div');
             p2NameContainer.classList.add('player_two_name');
             const p2Name = document.createElement('input');
+            p2Name.classList.add('inputBox');
             p2Name.placeholder = 'Player Two Name';
             p2Name.maxLength = '30';
             p2NameContainer.appendChild(p2Name);
             const p2SymbolContainer = document.createElement('div');
             p2SymbolContainer.classList.add('player_two_symbol');
             const p2Symbol = document.createElement('input');
+            p2Symbol.classList.add('inputBox');
             p2Symbol.maxLength = '1';
             p2Symbol.placeholder = 'Player Two Symbol';
             p2SymbolContainer.appendChild(p2Symbol);
             document.querySelector('.grid_container').appendChild(p2NameContainer);
             document.querySelector('.grid_container').appendChild(p2SymbolContainer);
             //Making a checkbox to determine if this is an AI opponent
-            // const checkboxCell = document.createElement('div');
-            // checkboxCell.classList.add('ai_checkbox');
-            // const checkbox = document.createElement('input');
-            // checkbox.setAttribute(`type`, `checkbox`);
-            // const checkboxlabel = document.createElement('label');
-            // checkboxlabel.innerText = 'AI opponent';
-            // checkboxCell.appendChild(checkboxlabel);
-            // checkboxlabel.appendChild(checkbox);
-            // document.querySelector('.grid_container').appendChild(checkboxCell);
+            const checkboxCell = document.createElement('div');
+            checkboxCell.classList.add('ai_checkbox');
+            const checkbox = document.createElement('input');
+            checkbox.setAttribute(`type`, `checkbox`);
+            checkbox.classList.add('checkbox');
+            const checkboxlabel = document.createElement('label');
+            checkboxlabel.innerText = 'AI opponent';
+            checkboxCell.appendChild(checkboxlabel);
+            checkboxlabel.appendChild(checkbox);
+            document.querySelector('.grid_container').appendChild(checkboxCell);
             //I made a button to finalise the creation
             const createCharacters = document.createElement('button');
             createCharacters.classList.add('new_session_button');
             createCharacters.innerText = 'Create';
-            createCharacters.addEventListener('click', () => {this.makePlayers(p1Name.value, p1Symbol.value, p2Name.value, p2Symbol.value)});/*, checkbox.value*/
+            createCharacters.addEventListener('click', () => {this.makePlayers(p1Name.value, p1Symbol.value, p2Name.value, p2Symbol.value, checkbox.value)});/*, checkbox.value*/
             document.querySelector('.grid_container').appendChild(createCharacters);
         } else {
             //If players are defined then skip
             this.setUpBoard();
         }
     }
-    makePlayers(p1name, p1symbol, p2name, p2symbol) {
+    makePlayers(p1name, p1symbol, p2name, p2symbol, checkbox) {
         /*, checkbox*/
         //I do input checks here
         if (p1name === '') {
@@ -94,9 +103,9 @@ class game {
             p1symbol = `${p1symbol}1`;
             p2symbol = `${p2symbol}2`;
         }
-        // if (checkbox === 'on') {
-        //     this.gameInfo.ai = true;
-        // }
+        if (checkbox === 'on') {
+            this.gameInfo.ai = true;
+        }
         //I set my values in local storage for reference
         document.querySelector('.grid_container').innerHTML = '';
         // localStorage.setItem('ai',JSON.stringify(this.gameInfo.ai));
@@ -186,7 +195,7 @@ class game {
                 this.gameInfo.playerTurn.innerText = `Turn: ${this.playerTwo.name}`;
             }
             // if (this.gameInfo.ai === true) {
-            //     this.playerTwo.aiTurn(event, this.grid);
+            //     this.playerTwo.aiTurn(event, this.grid, this.playerOne);
             //     this.gameInfo.playerTurn.innerText = `Turn: ${this.playerOne.name}`;
             // }
         } else if (`Turn: ${this.playerTwo.name}` === this.gameInfo.playerTurn.innerText) {
@@ -197,7 +206,7 @@ class game {
             }
 
         }
-        //I check fro gameOver conditions
+        //I check for gameOver conditions
         const isGameOver = this.gameOver();
         //If the game is not over then add a turn and continue on as normal
         if (isGameOver !== true) {
@@ -351,7 +360,6 @@ class player {
         this.name = name;
         this.symbol = symbol;
         this.wins = 0;
-        //this.score = 0;
     }
     turn(event) {
         if (event.target.innerText === '') {
@@ -362,13 +370,78 @@ class player {
             sfx.play();
         }
     }
-    // aiTurn(event,grid) {
-    //     localStorage.setItem('score', JSON.stringify(this.score));
-    //     const cells = Array.from(grid.childNodes).map(node => {
-    //        cells.push(node.innerText); 
-    //     })
-    //     const winningIndex = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
-    // }
+
+}
+class aiPlayer extends player {
+    constructor(name, symbol, huSymbol) {
+        this.name = name;
+        this.symbol = symbol;
+        this.wins = 0;
+        this.score = 0;
+        this.huSymbol = huSymbol;
+    }
+    turn(event, grid) {
+        const cells = Array.from(grid.childNodes).map(node => {
+           return (node.innerText); 
+        });
+    }
+    emptyCells(cells) {
+        return cells.filter(symbol => symbol !== this.symbol && symbol !== this.huSymbol);
+    }
+    win(cells, symbol) {
+        const winningIndex = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+            for (i=0;i<winningIndex.length;i++) {
+                const counter = 0;
+                for (j=0;j<3;i++) {
+                    if (cells[j] = symbol) {
+                        counter+=1
+                    }
+                }
+                if(counter === 3) {
+                    return true;
+                }
+            }
+            return false;
+    }
+    minimax(newCells, symbol) {
+        //THIS MINIMAX (INCOMPLETE) IS TAKEN FROM A WEBSITE - I WILL FIRST ADD IT TOO MY CODE AND THEN MAKE MY OWN VERSION
+        //I DO NOT CLAIM ANY OWNERSHIP OF THIS CODE
+        //get available cells
+        var availableCells = emptyCells(newCells);
+        //check the win conditions
+        if (this.win(cells, this.symbol)) {
+            return {score: -10};
+        } else if (this.win(cells, this.huSymbol)) {
+            return {score: 10};
+        } else if (availableCells.length === 0) {
+            return {score: 0};
+        }
+
+        var moves = [];
+        // loop through all available spots
+        for (i=0;i<availableCells.length;i++) {
+            var move;
+            move.index = newCells[availableCells[i]];
+
+            //set the empty spot to the current player
+
+            newBoard[availableCells[i]] = symbol;
+
+            if (symbol === this.symbol) {
+                var result = minimax(newBoard, this.huSymbol);
+            } else {
+                var result = minimax(newBoard, this.symbol);
+            }
+            move.score = result.score;
+        }
+
+        //reset the spot to empty
+        newBoard[availableCells[i]] = move.index;
+
+        moves.push(move);
+
+    }
+
 }
 
 let myGame = new game();
@@ -376,3 +449,62 @@ myGame.inputScreenPlayers();
 //Plan for tomorrow - give players the ability to customise their own characters - this can be done before the playing grid is made
 
 //I will be giving players the opportunity to create their own names and symbols (will need to update local storage to include the player names and symbols)
+
+    //This all needs its own subclass with its own turn system - bigger bit of work than anticipated
+    // aiTurn(event,grid, human) {
+    //     localStorage.setItem('score', JSON.stringify(this.score));
+    //     const cells = Array.from(grid.childNodes).map(node => {
+    //        return (node.innerText); 
+    //     })
+
+    //     const emptyCells = cells.map((cell, index) => {
+    //         if (cell === '') {
+    //             return index;
+    //         }
+    //     }).filter(Number);
+    //     console.log(emptyCells);
+    //     const turns = 9 - emptyCells.length;
+    //     this.minimax();
+
+    // }
+    // winning(cells) {
+    //     const winningIndex = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+    //     for (i=0;i<winningIndex.length;i++) {
+    //         const counter = 0;
+    //         for (j=0;j<3;i++) {
+    //             if (cells[j] = this.symbol) {
+    //                 counter+=1
+    //             }
+    //         }
+    //         if(counter === 3) {
+    //             return true;
+    //         }
+    //     }
+    //     return false;
+    // }
+    // minimax(emptyCells, grid, human, cells, turns) {
+    //     if(human.winning(cells)) {
+    //         return {score: -10};
+    //     } else if (this.winning(cells)) {
+    //         return {score: 10};
+    //     } else if (turns = 0){
+    //         return {score: 0};
+    //     }
+    //     //an array that will collect the moves
+    //     let moves = [];
+
+    //     for (i=0;i<emptyCells.length;i++) {
+    //         var move = {};
+    //         //create an object for each and store the index of that spot
+    //         move.index = cells[emptyCells[i]];
+    //         //Set the empty spot to the current player
+    //         if (turns % 2 === 0) {
+    //             cells[emptyCells[i]] = this.symbol;
+    //             var result = human.minimax(newBoard);
+    //         } else {
+    //             cells[emptyCells[i]] = human.symbol;
+    //             var result = this.minimax
+    //         }
+
+    //     }
+    // }
